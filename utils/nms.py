@@ -1,6 +1,6 @@
 import torch
 
-from iou import intersection_over_union
+from utils.iou import intersection_over_union
 
 def nms(bboxes , iou_threshold,threshold,box_format='corners'):
     # predictions [[class,conf,x1,y1,x2,y2],[],[]]
@@ -19,3 +19,5 @@ def nms(bboxes , iou_threshold,threshold,box_format='corners'):
         bboxes_after_nms.append(chosen_box)
         
     return bboxes_after_nms 
+
+

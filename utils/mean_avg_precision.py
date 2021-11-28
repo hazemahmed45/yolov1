@@ -1,6 +1,6 @@
 import torch
 from collections import Counter
-from iou import intersection_over_union
+from utils.iou import intersection_over_union
 
 def mean_average_precision(pred_bboxes,true_bboxes,iou_threshold,box_format='corners',num_classes=20):
     ## pred_bboxes: list = [[train_idx,class,conf,x1,y1,x2,y2],[],[]]
