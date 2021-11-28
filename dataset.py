@@ -23,6 +23,7 @@ class VocDataset(Dataset):
         img_path=os.path.join(self.img_dir,img_filename)
         label_path=os.path.join(self.label_dir,label_filename)
         img=Image.open(img_path)
+        
         bboxes=self.read_bboxes_from_file(label_path)
         
         bboxes=torch.tensor(bboxes)
@@ -33,14 +34,14 @@ class VocDataset(Dataset):
         else:
             img=torchvision.transforms.ToTensor()(img)
         
-        label_matrix=torch.zeros((self.S,self.S,self.C+5))
+        label_matrix=torch.zeros((self.S,self.S,self.C+self.B*5))
         for bbox in bboxes:
             class_label,x,y,w,h = bbox
             class_label=int(class_label)
+            
             i,j=int(y*self.S),int(self.S*x)
             x_cell,y_cell=self.S*x-j,self.S*y-i
             w_cell,h_cell=self.S*w,self.S*h
-
             if(label_matrix[i,j,20]==0):
                 label_matrix[i,j,20]=1
                 label_matrix[i,j,21:25]=torch.tensor([x_cell,y_cell,w_cell,h_cell])
@@ -52,7 +53,8 @@ class VocDataset(Dataset):
     
     def __len__(self):
         
-        return len(self.dataframe.shape[0])
+        return self.dataframe.shape[0]
+    
     def read_bboxes_from_file(self,filepath):
         bboxes=[]
         with open(filepath,'r') as f:
@@ -64,7 +66,8 @@ class VocDataset(Dataset):
     
     
 if __name__ == '__main__':
-    dataset=VocDataset('PascalVoc/train.csv','PascalVoc/images','PascalVoc/labels')
-    img,label=dataset[0]
+    dataset=VocDataset('PascalVoc/8examples.csv','PascalVoc/images','PascalVoc/labels')
+    img,label=dataset[1]
     print(img.shape,label.shape)
+    print(label[3,4,:])
     pass
